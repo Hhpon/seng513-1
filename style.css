@@ -1,0 +1,90 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+  background-image: url('img/carburn.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-color: #1a1a1a;
+}
+
+.clouds {
+  padding: 0px 0px 0px 0px;
+  background-image: url('img/clouds.png');
+  background-repeat: repeat-x;
+  background-size: 1914px 80px;
+}
+
+nav {
+  margin: auto;
+  text-align: center;
+}
+
+.tab {
+  width: 5em;
+  height: 30px;
+  padding: 0.5em;
+  display:inline-block;
+  color: #3a3a3a;
+  margin: 1px;
+  border: 1px solid #b8d2ec;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  -webkit-transform: skew(-20deg);
+	-moz-transform: skew(-20deg);
+	-o-transform: skew(-20deg);
+  text-align:center;
+  background: #dce9f9;
+}
+
+a .tab:hover {
+  background: #adcae8;
+  color: white;
+}
+
+.tab-text {
+  font-weight: bold;
+  vertical-align: middle;
+  display:inline-block;
+  -webkit-transform: skew(20deg);
+	-moz-transform: skew(20deg);
+	-o-transform: skew(20deg);
+}
+
+.tab-selected {
+  color: #1a1a1a;
+  background-color: #ececec;
+  border-color: #a8a8a8;
+}
+
+.birdbutton {
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+}
+
+.birdbutton:hover {
+  border-color: #efefef;
+  background: #efefef;
+}
+
+#birdbuttons {
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-family: "Merienda One", sans-serif;
+  font-size: 3em;
+  color: #efefef;
+  text-align: center;
+  text-shadow: 1px 1px 2px #1a1a1a;
+}
+
+/*
+.navbar .nav-tab:hover {
+  background:blue;
+}
+
+.navbar .nav-tab.selected {
+	background:red;
+} */
