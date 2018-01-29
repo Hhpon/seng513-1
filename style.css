@@ -91,6 +91,10 @@ body.home {
   background-size: 1914px 80px;
 }
 
+.italic {
+  font-style: italic;
+}
+
 nav {
   margin: auto;
   text-align: center;
