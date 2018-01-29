@@ -90,8 +90,8 @@ a .tab:hover {
 }
 
 .birdbutton:hover {
-  border-color: #efefef;
-  background: #efefef;
+  border-color: #fcfcfc;
+  background: #fcfcfc;
 }
 
 #birdbuttons {
@@ -102,16 +102,72 @@ a .tab:hover {
 h1 {
   font-family: "Merienda One", sans-serif;
   font-size: 3em;
-  color: #efefef;
+  color: #fcfcfc;
   text-align: center;
   text-shadow: 1px 1px 2px #1a1a1a;
 }
 
-/*
-.navbar .nav-tab:hover {
-  background:blue;
+.content {
+  width: 50em;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.navbar .nav-tab.selected {
-	background:red;
-} */
+.polaroid {
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.birdimg {
+  display: block;
+  width: 100%;
+}
+
+map {
+  float: left;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.fact {
+  display: flex;
+  align-items: center;
+  background: white;
+}
+
+table.fact {
+  border-collapse: collapse;
+}
+
+.note {
+  padding: 6px 10px;
+  background: #878f67;
+  color: #fcfcfc;
+  border-top: 1px solid #c5c6ad;
+}
+
+blockquote {
+  color: #252a25;
+  border-left: 4px solid #878f67;
+  font-style: italic;
+  margin: 30px 0 30px 15px;
+  padding-left: 15px;
+}
+
+td, th {
+  text-align: left;
+  padding: 6px;
+  border: 1px solid #c5c6ad;
+}
+
+table.blackbird {
+  color: #252a25;
+}
+
+table.blackbird tr:nth-child(odd) {
+  background-color: #59962d;
+}
+
+table.blackbird tr:nth-child(even) {
+  background-color: #90a52f;
+}
