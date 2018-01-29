@@ -140,6 +140,7 @@ a .tab:hover {
 .birdbutton {
   border: 2px solid #1a1a1a;
   border-radius: 4px;
+  width: 16vw;
 }
 
 .birdbutton:hover {
