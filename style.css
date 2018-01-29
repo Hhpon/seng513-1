@@ -1,7 +1,80 @@
+/*
+Blackbird
+*/
+:root.blackbird {
+  --table-even: #90A52F;
+  --table-odd: #59962D;
+  --background: #C5C6AD;
+  --dark-text: #252A25;
+  --light-text: #fcfcfc;
+  --note: #878F67;
+}
+
+/*
+Chickadee
+*/
+:root.chickadee {
+  --table-even: #000000;
+  --table-odd: #000000;
+  --background: #57441e;
+  --dark-text: #000000;
+  --light-text: #000000;
+  --note: #000000;
+}
+
+/*
+Gull
+*/
+:root.gull {
+  --table-even: #000000;
+  --table-odd: #000000;
+  --background: #8e8981;
+  --dark-text: #000000;
+  --light-text: #000000;
+  --note: #000000;
+}
+
+/*
+Mallard
+*/
+:root.mallard {
+  --table-even: #000000;
+  --table-odd: #000000;
+  --background: #B04d3e;
+  --dark-text: #000000;
+  --light-text: #000000;
+  --note: #000000;
+}
+
+/*
+Owl
+*/
+:root.owl {
+  --table-even: #000000;
+  --table-odd: #000000;
+  --background: #d5dcdd;
+  --dark-text: #000000;
+  --light-text: #000000;
+  --note: #000000;
+}
+
+/*
+Wren
+*/
+:root.wren {
+  --table-even: #000000;
+  --table-odd: #000000;
+  --background: #c8c594;
+  --dark-text: #000000;
+  --light-text: #000000;
+  --note: #000000;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: "Open Sans", sans-serif;
+  background-color: var(--background);
 }
 
 body.home {
@@ -9,30 +82,6 @@ body.home {
   background-size: 100%;
   background-repeat: no-repeat;
   background-color: #1a1a1a;
-}
-
-body.blackbird {
-  background-color: #c5c6ad;
-}
-
-body.chickadee {
-  background-color: #57441e;
-}
-
-body.gull {
-  background-color: #8e8981;
-}
-
-body.mallard {
-  background-color: #B04d3e;
-}
-
-body.owl {
-  background-color: #d5dcdd;
-}
-
-body.wren {
-  background-color: #c8c594;
 }
 
 .clouds {
@@ -137,37 +186,34 @@ map {
 
 table.fact {
   border-collapse: collapse;
+  color: var(--dark-text);
+}
+
+table tr:nth-child(odd) {
+  background-color: var(--table-odd);
+}
+
+table tr:nth-child(even) {
+  background-color: var(--table-even);
 }
 
 .note {
   padding: 6px 10px;
-  background: #878f67;
-  color: #fcfcfc;
-  border-top: 1px solid #c5c6ad;
+  background: var(--note);
+  color: var(--light-text);
+  border-top: 1px solid var(--background);
 }
 
 blockquote {
-  color: #252a25;
-  border-left: 4px solid #878f67;
   font-style: italic;
   margin: 30px 0 30px 15px;
   padding-left: 15px;
+  color: var(--dark-text);
+  border-left: 4px solid var(--note);
 }
 
 td, th {
   text-align: left;
   padding: 6px;
-  border: 1px solid #c5c6ad;
-}
-
-table.blackbird {
-  color: #252a25;
-}
-
-table.blackbird tr:nth-child(odd) {
-  background-color: #59962d;
-}
-
-table.blackbird tr:nth-child(even) {
-  background-color: #90a52f;
+  border: 1px solid var(--background);
 }
