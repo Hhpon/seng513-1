@@ -6,7 +6,7 @@ Blackbird
   --table-odd: #59962D;
   --background: #C5C6AD;
   --dark-text: #252A25;
-  --light-text: #fcfcfc;
+  --light-text: #FCFCFC;
   --note: #878F67;
 }
 
@@ -14,60 +14,60 @@ Blackbird
 Chickadee
 */
 :root.chickadee {
-  --table-even: #000000;
-  --table-odd: #000000;
+  --table-even: #CFB898;
+  --table-odd: #9B9790;
   --background: #57441e;
-  --dark-text: #000000;
-  --light-text: #000000;
-  --note: #000000;
+  --dark-text: #120C0A;
+  --light-text: #FCFCFC;
+  --note: #8C6434;
 }
 
 /*
 Gull
 */
 :root.gull {
-  --table-even: #000000;
-  --table-odd: #000000;
+  --table-even: #767160;
+  --table-odd: #735D58;
   --background: #8e8981;
-  --dark-text: #000000;
-  --light-text: #000000;
-  --note: #000000;
+  --dark-text: #403931;
+  --light-text: #D9D7D9;
+  --note: #D9D7D9;
 }
 
 /*
 Mallard
 */
 :root.mallard {
-  --table-even: #000000;
-  --table-odd: #000000;
+  --table-even: #C7C0BD;
+  --table-odd: #9FA8A9;
   --background: #B04d3e;
-  --dark-text: #000000;
-  --light-text: #000000;
-  --note: #000000;
+  --dark-text: #292C1F;
+  --light-text: #FCFCFC;
+  --note: #83837F;
 }
 
 /*
 Owl
 */
 :root.owl {
-  --table-even: #000000;
-  --table-odd: #000000;
-  --background: #d5dcdd;
+  --table-even: #988A6E;
+  --table-odd: #705D3F;
+  --background: #D5DCDD;
   --dark-text: #000000;
-  --light-text: #000000;
-  --note: #000000;
+  --light-text: #DCCBA1;
+  --note: #312720;
 }
 
 /*
 Wren
 */
 :root.wren {
-  --table-even: #000000;
-  --table-odd: #000000;
-  --background: #c8c594;
-  --dark-text: #000000;
-  --light-text: #000000;
-  --note: #000000;
+  --table-even: #8AA876;
+  --table-odd: #6F913C;
+  --background: #C8C594;
+  --dark-text: #0D3D09;
+  --light-text: #FCFCFC;
+  --note: #51820B;
 }
 
 body {
@@ -184,7 +184,7 @@ map {
   background: white;
 }
 
-table.fact {
+table {
   border-collapse: collapse;
   color: var(--dark-text);
 }
@@ -210,6 +210,14 @@ blockquote {
   padding-left: 15px;
   color: var(--dark-text);
   border-left: 4px solid var(--note);
+}
+
+.light-text {
+  color: var(--light-text);
+}
+
+.dark-text {
+  color: var(--dark-text);
 }
 
 td, th {
