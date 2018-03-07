@@ -1,9 +1,16 @@
 $(function() {
     let socket = io();
 
-    socket.on('connected', (name) => {
-        document.cookie = "name=" + name;
-        console.log(name);
+    function updateCookie(userData) {
+        document.cookie = "id=" + userData.id;
+        document.cookie = "animalName" + userData.animalName;
+        document.cookie = "name=" + userData.name;
+        document.cookie = "color=" + userData.color;
+    };
+
+    socket.on('connected', (userData) => {
+        updateCookie(userData);
+        console.log(userData.name + " is connected");
     });
     
 

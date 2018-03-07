@@ -88,18 +88,22 @@ const COLORS = shuffle([
 
 class User {
     constructor(name) {
-        this.animalName = name;
-        this.name = "Anonymous " + name;
-        this.color = COLORS[colorIndex];
-        usedNames.add(this.name);
-        colorIndex = (colorIndex + 1) % COLORS.length;
-        connectedUsers.add(this);
-        return this.name;
+        if (name) {
+            this.id = userIndex++;
+            this.animalName = name;
+            this.name = "Anonymous " + name;
+            this.color = COLORS[colorIndex];
+            usedNames.add(this.name);
+            colorIndex = (colorIndex + 1) % COLORS.length;
+            connectedUsers.add(this);
+            userRecords.push(this);
+            return name;
+        }
     }
 
     restoreAnimalName() {
         // only restore it once
-        if ("Anonymous " + this.animalName === this.name) {
+        if (("Anonymous " + this.animalName) == this.name) {
             console.log("Restoring " + this.animalName + "...");    // DEBUG
             animals.push(this.animalName);
             this.animalName = null;
@@ -108,26 +112,52 @@ class User {
 
     changeName(name) {
         // only change name if unique and non-empty
-        if ((name || name === '0') && !usedNames.has(name)) {
+        if ((name || name == '0') && !usedNames.has(name)) {
             this.restoreAnimalName();
             usedNames.delete(this.name);
             this.name = name;
             usedNames.add(this.name);
+            return true;
         }
+        return false;
     }
 
-    remove() {
+    reactivate(id, animalName, name, color) {
+        this.id = id;
+
+        // deal with name
+        if (this.changeName(name) == false) {
+            let animal = getRandomAnimal();
+            this.animalName = name;
+            this.name = "Anonymous " + animal;
+        } else {
+            // remove animal name from list if it is there
+            let i = animals.indexOf(animalName);
+            if (i > -1) {
+                animals.splice(index, 1);
+            }
+        }
+        this.color = color;
+        usedNames.add(this.name);
+        connectedUsers.push(this);
+        return this;
+    }
+
+    deactivate() {
+        // put name back in animals
         this.restoreAnimalName();
         usedNames.delete(this.name);
-        connectedUsers.delete(this);
+        connectedUsers.splice(connectedUsers.indexOf(this), 1);
         return this;
     }
 }
 
 const maxUsers = Math.min(animals.length, COLORS.length);
 let colorIndex = 0;
-let connectedUsers = new Set();
+let userIndex = 0;
+let connectedUsers = [];
 let usedNames = new Set();
+let userRecords = [];
 
 // select a random animal name and remove it from animals list
 function getRandomAnimal() {
@@ -155,18 +185,45 @@ function getRandomAnimal() {
 
 io.on('connection', (socket) => {
 
+    // getUser = () => {
+    //     console.log("get user...");
+    //     console.log(cookie.parse(socket.request.headers.cookie));
+    //     console.log(userRecords);
+    //     console.log(cookie.parse(socket.request.headers.cookie)["id"]);
+    //     return userRecords[cookie.parse(socket.request.headers.cookie)["id"]];
+    // }
+
     // socket.emit("sessiondata", socket.handshake.session);
 
+    let user;
 
-    if (cookie.parse(socket.request.headers.cookie)["name"]) {
-        let name = cookie.parse(socket.request.headers.cookie)["name"]
-        console.log(name + " has RETURNED!");
+    if (cookie.parse(socket.request.headers.cookie)["id"]) {
+        cookieData = cookie.parse(socket.request.headers.cookie);
+        user = new User().reactivate(
+            cookieData.id,
+            cookieData.animalName,
+            cookieData.name,
+            cookieData.color
+        );
+        let reactivated = (user.name == cookieData.name);
+        console.log(user.name + (reactivated ? " has returned!" : " joined"));
+    } else {
+        user = new User(getRandomAnimal());
+        console.log(user.name + " joined");
     }
+    socket.emit('connected', user);
 
 
-    if (socket.request.headers.cookie){
-        console.log(cookie.parse(socket.request.headers.cookie));
-    }
+
+        // if this user already exists, just reactivate them
+
+
+    
+
+
+    // if (socket.request.headers.cookie){
+    //     console.log(cookie.parse(socket.request.headers.cookie));
+    // }
     // console.log(sharedSession.cookie.parse(socket.request.headers.cookie));
     // let sessionID = cookie.parse(socket.request.headers.cookie)['connect.sid'];
     // console.log(sessionID);
@@ -175,11 +232,11 @@ io.on('connection', (socket) => {
 
 
         
-    let user = new User(getRandomAnimal());
-    // socket.handshake.session.username = user.name;
-    console.log(user.name + " connected");
+    // let user = new User(getRandomAnimal());
+    // // socket.handshake.session.username = user.name;
+    // console.log(user.name + " connected");
 
-    socket.emit('connected', user.name);
+
     
     // okay... I'm getting session id's but... they change every time.
     // console.log(socket.handshake.session.id);
@@ -195,22 +252,14 @@ io.on('connection', (socket) => {
 
 
     socket.on('chat message', (msg) => {
-        console.log(cookie.parse(socket.request.headers.cookie));
-        console.log('message: ' + msg);
+        console.log(user.name + ": " + msg);
         io.emit('chat message', msg);
     });
 
 
     socket.on('disconnect', () => {
-
-        //
-        // TODO: on user exiting, restore animal name to the list.
-        //       you need to know which user left in order to do this!
-        //       ...just call <user>.remove()
-        //
-
-
-        console.log('user disconnected');
+        user.deactivate();
+        console.log(user.name + " has left");
     });
 });
 
