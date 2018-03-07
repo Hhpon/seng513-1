@@ -1,34 +1,16 @@
 // Simple chat application starting code taken from
 // https://github.com/socketio/socket.io/tree/master/examples/chat
 
-let secret = "secret-cat";
 let express = require('express');
-let session = require('express-session')({
-    secret: secret,
-    resave: true,
-    saveUninitialized: true
-});
-let sharedSession = require('express-socket.io-session');
 let app = express();
 let path = require('path');
-let server = require('http').createServer(app);
+let http = require('http').createServer(app);
 let cookie = require('cookie');
-let cookieParser = require('cookie-parser');
-let io = require('socket.io')(server);
+let io = require('socket.io')(http);
 const port = 51900;
 
 // serve static files using absolute path
 app.use(express.static(path.join(__dirname, 'public')));
-
-// attach session
-app.use(session);
-
-// share session with io sockets
-// source: https://www.npmjs.com/package/express-socket.io-session
-io.use(sharedSession(session, {
-    autoSave: true
-}));
-
 
 // Fisher–Yates array shuffle algorithm
 // source: https://bost.ocks.org/mike/shuffle/
@@ -132,6 +114,7 @@ let connectedUsers = {};
 
 io.on('connection', (socket) => {
 
+    // connect
     let user;
     try {
         // try to restore existing user
@@ -144,8 +127,8 @@ io.on('connection', (socket) => {
         let reactivated = (user.name == cookieData.name);
         console.log(user.name + (reactivated ? " has returned!" : " joined"));
 
-        // create a new one if that fails
     } catch (e) {
+        // create a new one if that fails
         user = new User();
         console.log(user.name + " joined");
     }
@@ -153,13 +136,13 @@ io.on('connection', (socket) => {
     // save user data in a cookie
     socket.emit('connected', user);
 
-
+    // receive message
     socket.on('chat message', (msg) => {
         console.log(user.name + ": " + msg);
-        io.emit('chat message', msg);
+        io.emit('chat message', prefix + msg + postfix);
     });
 
-
+    // disconnect
     socket.on('disconnect', () => {
         user.deactivate();
         console.log(user.name + " has left");
@@ -168,6 +151,6 @@ io.on('connection', (socket) => {
 
 
 // listen for new connections
-server.listen(port, () => {
+http.listen(port, () => {
     console.log('listening on *:' + port);
 });
