@@ -1,4 +1,4 @@
-# SENG 533 Assignment 3
+# SENG 533 - Assignment 3
 
 ## Instructions
 
@@ -7,6 +7,7 @@
 To run the server, navigate the directory containing this README file and run:
 
 `node install`
+
 `node start`
 
 ### Load Chat Client

@@ -1,7 +1,13 @@
-// Sample chat application code taken from
-// https://socket.io/get-started/chat/
+// Simple chat application starting code taken from
+// https://github.com/socketio/socket.io/tree/master/examples/chat
 
 let express = require('express');
+let session = require('express-session')({
+    secret: "secret-cat",
+    resave: true,
+    saveUninitialized: true
+});
+let sharedsession = require('express-socket.io-session');
 let app = express();
 let path = require('path');
 let http = require('http').Server(app);
@@ -15,6 +21,15 @@ http.listen(port, () => {
 
 // serve static files using absolute path
 app.use(express.static(path.join(__dirname, 'public')));
+
+// attach session
+app.use(session);
+
+// share session with io sockets
+// source: https://www.npmjs.com/package/express-socket.io-session
+io.use(sharedsession(session, {
+    autoSave: true
+}));
 
 
 // Fisher–Yates array shuffle algorithm
@@ -122,9 +137,27 @@ function getRandomAnimal() {
 };
 
 io.on('connection', (socket) => {
-    console.log(new User(getRandomAnimal()).name + " connected");
+    
+    
+    if (socket.handshake.session.views) {
+        console.log(socket.handshake.session.views);
+        socket.handshake.session.views++;
+    } else {
+        socket.handshake.session.views = 1;
+    }
 
-    socket.on('chat message', function(msg) {
+    // okay... I'm getting session id's but... they change every time.
+    console.log(socket.handshake.session.id);
+    
+
+    
+
+
+    let user = new User(getRandomAnimal());
+    console.log(user.name + " connected");
+
+
+    socket.on('chat message', (msg) => {
         console.log('message: ' + msg);
         io.emit('chat message', msg);
     });
