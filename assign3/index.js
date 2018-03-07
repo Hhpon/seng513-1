@@ -1,23 +1,21 @@
 // Simple chat application starting code taken from
 // https://github.com/socketio/socket.io/tree/master/examples/chat
 
+let secret = "secret-cat";
 let express = require('express');
 let session = require('express-session')({
-    secret: "secret-cat",
+    secret: secret,
     resave: true,
     saveUninitialized: true
 });
-let sharedsession = require('express-socket.io-session');
+let sharedSession = require('express-socket.io-session');
 let app = express();
 let path = require('path');
-let http = require('http').Server(app);
-let io = require('socket.io')(http);
+let server = require('http').createServer(app);
+let cookie = require('cookie');
+let cookieParser = require('cookie-parser');
+let io = require('socket.io')(server);
 const port = 51900;
-
-// listen for new connections
-http.listen(port, () => {
-    console.log('listening on *:' + port);
-});
 
 // serve static files using absolute path
 app.use(express.static(path.join(__dirname, 'public')));
@@ -27,7 +25,7 @@ app.use(session);
 
 // share session with io sockets
 // source: https://www.npmjs.com/package/express-socket.io-session
-io.use(sharedsession(session, {
+io.use(sharedSession(session, {
     autoSave: true
 }));
 
@@ -136,28 +134,68 @@ function getRandomAnimal() {
     return animals.splice(Math.floor(Math.random() * animals.length), 1)[0];
 };
 
+
+// io.set('authorization', function (data, accept) {
+//     // check if there's a cookie header
+//     if (data.headers.cookie) {
+//         // if there is, parse the cookie
+//         data.cookie = cookie.parse(data.headers.cookie);
+//         // note that you will need to use the same key to grad the
+//         // session id, as you specified in the Express setup.
+//         data.sessionID = data.cookie['express.sid'];
+//     } else {
+//        // if there isn't, turn down the connection with a message
+//        // and leave the function.
+//        return accept('No cookie transmitted.', false);
+//     }
+//     // accept the incoming connection
+//     accept(null, true);
+// });
+
+
 io.on('connection', (socket) => {
-    
-    
-    if (socket.handshake.session.views) {
-        console.log(socket.handshake.session.views);
-        socket.handshake.session.views++;
-    } else {
-        socket.handshake.session.views = 1;
+
+    // socket.emit("sessiondata", socket.handshake.session);
+
+
+    if (cookie.parse(socket.request.headers.cookie)["name"]) {
+        let name = cookie.parse(socket.request.headers.cookie)["name"]
+        console.log(name + " has RETURNED!");
     }
 
-    // okay... I'm getting session id's but... they change every time.
-    console.log(socket.handshake.session.id);
-    
 
-    
+    if (socket.request.headers.cookie){
+        console.log(cookie.parse(socket.request.headers.cookie));
+    }
+    // console.log(sharedSession.cookie.parse(socket.request.headers.cookie));
+    // let sessionID = cookie.parse(socket.request.headers.cookie)['connect.sid'];
+    // console.log(sessionID);
+    // console.log('sessionID ' + socket.handshake.sessionID);
+    // console.log(socket.id);
 
 
+        
     let user = new User(getRandomAnimal());
+    // socket.handshake.session.username = user.name;
     console.log(user.name + " connected");
+
+    socket.emit('connected', user.name);
+    
+    // okay... I'm getting session id's but... they change every time.
+    // console.log(socket.handshake.session.id);
+
+    // socket.handshake.session.save();
+    
+
+    
+
+
+    // let user = new User(getRandomAnimal());
+    // console.log(user.name + " connected");
 
 
     socket.on('chat message', (msg) => {
+        console.log(cookie.parse(socket.request.headers.cookie));
         console.log('message: ' + msg);
         io.emit('chat message', msg);
     });
@@ -174,4 +212,9 @@ io.on('connection', (socket) => {
 
         console.log('user disconnected');
     });
+});
+
+// listen for new connections
+server.listen(port, () => {
+    console.log('listening on *:' + port);
 });
