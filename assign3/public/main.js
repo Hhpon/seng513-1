@@ -3,7 +3,6 @@ $(function() {
 
     function updateCookie(userData) {
         document.cookie = "id=" + userData.id;
-        document.cookie = "animalName" + userData.animalName;
         document.cookie = "name=" + userData.name;
         document.cookie = "color=" + userData.color;
     };

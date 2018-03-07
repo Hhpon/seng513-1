@@ -44,7 +44,7 @@ function shuffle(arr) {
 }
 
 // 77 animal names
-let animals = [
+const ANIMALS = shuffle([
     "Alligator", "Anteater", "Armadillo", "Auroch", "Axolotl",
     "Badger", "Bat", "Beaver", "Buffalo",
     "Camel", "Chameleon", "Cheetah", "Chipmunk", "Chinchilla", "Chupacabra", "Cormorant", "Coyote", "Crow",
@@ -67,7 +67,7 @@ let animals = [
     "Tiger", "Turtle",
     "Unicorn",
     "Walrus", "Wolf", "Wolverine", "Wombat"
-];
+].map(x => "Anonymous " + x));
 
 // 64 colors
 const COLORS = shuffle([
@@ -87,168 +87,71 @@ const COLORS = shuffle([
 ]);
 
 class User {
-    constructor(name) {
-        if (name) {
-            this.id = userIndex++;
-            this.animalName = name;
-            this.name = "Anonymous " + name;
-            this.color = COLORS[colorIndex];
-            usedNames.add(this.name);
-            colorIndex = (colorIndex + 1) % COLORS.length;
-            connectedUsers.add(this);
-            userRecords.push(this);
-            return name;
-        }
-    }
+    constructor(id, name, color) {
+        this.id = id || userIndex++;
 
-    restoreAnimalName() {
-        // only restore it once
-        if (("Anonymous " + this.animalName) == this.name) {
-            console.log("Restoring " + this.animalName + "...");    // DEBUG
-            animals.push(this.animalName);
-            this.animalName = null;
+        // set unique random name
+        do {
+            if (name) {
+                this.name = name;
+            } else {
+                this.name = ANIMALS[animalIndex];
+                animalIndex = (animalIndex + 1) % ANIMALS.length;
+            }
+            name = "";
         }
+        while (this.name in Object.keys(connectedUsers));
+
+        this.color = color || COLORS[colorIndex++];
+        colorIndex = (colorIndex + 1) % COLORS.length;
+        
+        connectedUsers[this.name] = this;
+        return this;
     }
 
     changeName(name) {
-        // only change name if unique and non-empty
-        if ((name || name == '0') && !usedNames.has(name)) {
-            this.restoreAnimalName();
-            usedNames.delete(this.name);
+        if (!(name in Object.keys(connectedUsers))) {
+            // update entry and change name
+            delete connectedUsers[this.name];
             this.name = name;
-            usedNames.add(this.name);
-            return true;
+            connectedUsers[this.name] = this;
         }
-        return false;
-    }
-
-    reactivate(id, animalName, name, color) {
-        this.id = id;
-
-        // deal with name
-        if (this.changeName(name) == false) {
-            let animal = getRandomAnimal();
-            this.animalName = name;
-            this.name = "Anonymous " + animal;
-        } else {
-            // remove animal name from list if it is there
-            let i = animals.indexOf(animalName);
-            if (i > -1) {
-                animals.splice(index, 1);
-            }
-        }
-        this.color = color;
-        usedNames.add(this.name);
-        connectedUsers.push(this);
-        return this;
     }
 
     deactivate() {
-        // put name back in animals
-        this.restoreAnimalName();
-        usedNames.delete(this.name);
-        connectedUsers.splice(connectedUsers.indexOf(this), 1);
-        return this;
+        delete connectedUsers[this.name];
     }
 }
 
-const maxUsers = Math.min(animals.length, COLORS.length);
+const maxUsers = Math.min(ANIMALS.length, COLORS.length);
 let colorIndex = 0;
+let animalIndex = 0;
 let userIndex = 0;
-let connectedUsers = [];
-let usedNames = new Set();
-let userRecords = [];
-
-// select a random animal name and remove it from animals list
-function getRandomAnimal() {
-    return animals.splice(Math.floor(Math.random() * animals.length), 1)[0];
-};
-
-
-// io.set('authorization', function (data, accept) {
-//     // check if there's a cookie header
-//     if (data.headers.cookie) {
-//         // if there is, parse the cookie
-//         data.cookie = cookie.parse(data.headers.cookie);
-//         // note that you will need to use the same key to grad the
-//         // session id, as you specified in the Express setup.
-//         data.sessionID = data.cookie['express.sid'];
-//     } else {
-//        // if there isn't, turn down the connection with a message
-//        // and leave the function.
-//        return accept('No cookie transmitted.', false);
-//     }
-//     // accept the incoming connection
-//     accept(null, true);
-// });
+let connectedUsers = {};
 
 
 io.on('connection', (socket) => {
 
-    // getUser = () => {
-    //     console.log("get user...");
-    //     console.log(cookie.parse(socket.request.headers.cookie));
-    //     console.log(userRecords);
-    //     console.log(cookie.parse(socket.request.headers.cookie)["id"]);
-    //     return userRecords[cookie.parse(socket.request.headers.cookie)["id"]];
-    // }
-
-    // socket.emit("sessiondata", socket.handshake.session);
-
     let user;
-
-    if (cookie.parse(socket.request.headers.cookie)["id"]) {
+    try {
+        // try to restore existing user
         cookieData = cookie.parse(socket.request.headers.cookie);
-        user = new User().reactivate(
+        user = new User(
             cookieData.id,
-            cookieData.animalName,
             cookieData.name,
             cookieData.color
         );
         let reactivated = (user.name == cookieData.name);
         console.log(user.name + (reactivated ? " has returned!" : " joined"));
-    } else {
-        user = new User(getRandomAnimal());
+
+        // create a new one if that fails
+    } catch (e) {
+        user = new User();
         console.log(user.name + " joined");
     }
+
+    // save user data in a cookie
     socket.emit('connected', user);
-
-
-
-        // if this user already exists, just reactivate them
-
-
-    
-
-
-    // if (socket.request.headers.cookie){
-    //     console.log(cookie.parse(socket.request.headers.cookie));
-    // }
-    // console.log(sharedSession.cookie.parse(socket.request.headers.cookie));
-    // let sessionID = cookie.parse(socket.request.headers.cookie)['connect.sid'];
-    // console.log(sessionID);
-    // console.log('sessionID ' + socket.handshake.sessionID);
-    // console.log(socket.id);
-
-
-        
-    // let user = new User(getRandomAnimal());
-    // // socket.handshake.session.username = user.name;
-    // console.log(user.name + " connected");
-
-
-    
-    // okay... I'm getting session id's but... they change every time.
-    // console.log(socket.handshake.session.id);
-
-    // socket.handshake.session.save();
-    
-
-    
-
-
-    // let user = new User(getRandomAnimal());
-    // console.log(user.name + " connected");
 
 
     socket.on('chat message', (msg) => {
@@ -262,6 +165,7 @@ io.on('connection', (socket) => {
         console.log(user.name + " has left");
     });
 });
+
 
 // listen for new connections
 server.listen(port, () => {
