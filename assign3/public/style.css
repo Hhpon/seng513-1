@@ -9,6 +9,15 @@ global constants
     --baby-blue: #82E0FF;
 }
 
+/* ######################### */
+/* 
+.x {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+} */
+
+
 * {
     margin: 0;
     padding: 0;
@@ -19,6 +28,71 @@ body {
     font: 13px Helvetica, Arial;
     background: var(--dark-row);
 }
+
+.output {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+  
+.sidebar {
+    display: flex;
+    flex-direction: column; 
+    flex: 1 0 10em; 
+    background-color: hsl(4,99%,66%);
+}
+  
+.chat {
+    display: flex;
+    flex-direction: column;
+    flex: 10 0 10em;  
+    background-color: hsl(233,21%,56%);
+}
+  
+  /*----- Main------- */
+  
+.messages.header {
+    flex:1;
+    background-color: green;
+    max-height:50px;
+}
+  
+  
+.messages.content {
+    flex:1;
+    background-color: purple;
+}
+  
+
+  
+.input {
+    flex:1;
+    max-height:70px;
+    background-color: #009688;
+}
+  
+  /*----- Sidebar------- */
+  
+.users.header {
+    flex:1;
+    max-height:50px;
+    background-color: yellow;
+}
+  
+.users.content {
+    flex:1;
+    background-color: pink;
+}
+  
+/* ######################### */
+
+
+
+/* 
+
+
+
+
 
 form {
     background: #000;
@@ -106,7 +180,7 @@ form button:active {
     overflow-y: scroll;
     position: absolute;
     bottom: 0;
-}
+} */
 
 
 
