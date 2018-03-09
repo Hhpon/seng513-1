@@ -10,6 +10,7 @@ $(function() {
 
         // update client state
         id = userData.id;
+        $('#username').text(userData.name);
     };
 
     socket.on('connected', (userData) => {
