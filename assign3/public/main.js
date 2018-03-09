@@ -15,8 +15,8 @@ $(function() {
 
     socket.on('connected', (userData) => {
         update(userData);
-        $('#messages').empty();
-        $('#messages').append($('<li>').text("You are " + userData.name + "."));
+        $('.messages.content').empty();
+        $('.messages.content').append($('<li>').text("You are " + userData.name + "."));
         console.log(userData.name + " is connected");
     });
     
@@ -43,13 +43,13 @@ $(function() {
             li.wrapInner('<b>');
         }
 
-        $('#messages').append(li);
+        $('.messages.content').append(li);
     });
 
     socket.on('update users', (users) => {
-        $('#users').empty();
+        $('.users.content').empty();
         for (u of users) {
-            $('#users').append($('<li>').text(u));
+            $('.users.content').append($('<li>').text(u));
         }
     });
 
