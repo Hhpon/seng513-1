@@ -20,7 +20,7 @@ body {
     background: var(--dark-row);
 }
 
-#main {
+/* #main {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -29,18 +29,22 @@ body {
 .output {
     display: flex;
     flex-direction: row;
-}
+} */
   
 .sidebar {
-    display: flex;
+    width: 25%;
+    float: right;
+    /* display: flex;
     flex-direction: column;
-    flex: 1 0 10em; 
+    flex: 1 0 10em;  */
 }
   
 .chat {
-    display: flex;
+    width: 75%;
+    float: left;
+    /* display: flex;
     flex-direction: column;
-    flex: 3 0 10em;
+    flex: 3 0 10em; */
 }
 
 .messages, .users {
@@ -64,9 +68,7 @@ body {
     background: var(--light-row);
 }
   
-.form {
-    flex:1;
-    max-height:70px;
+form {
     background: #000;
     padding: 3px;
     position: fixed;
@@ -99,19 +101,31 @@ form button:active {
 }
 
 .header {
-    flex: 0;
+    display: inline-block;
     background: var(--input-background);
     color: var(--input-text);
     text-align: left;
     padding: 10px;
+    width: 100%;
+    /* flex: 0;
+    background: var(--input-background);
+    color: var(--input-text);
+    text-align: left;
+    padding: 10px; */
 }
 
 .content {
-    flex: 1;
-    padding-top: 100%;
-    /* display: block; */
+    display: block;
     overflow-y: scroll;
-    /* flex-direction: column-reverse; */
+    /* position: absolute;
+    bottom: 0; */
+
+
+    /* flex: 1;
+    padding-top: 100%;
+    display: block;
+    overflow-y: scroll;
+    flex-direction: column-reverse; */
 }
 
   /*----- Sidebar------- */
@@ -132,68 +146,6 @@ form button:active {
 
 
 
-
-
-
-
-#main {
-    display: flex;
-}
-
-#messages-area {
-    width: 75%;
-    float: left;
-}
-
-#users-area {
-    width: 25%;
-    float: right;
-}
-
-#valign-messages {
-    position: relative;
-    height: 100%;
-}
-
-
-
-
-
-
-
-
-
-
-
-#messages li, #users li {
-    padding: 5px 10px;
-    width: 100%;
-    display: inline-block;
-}
-
-#messages li:nth-child(odd), #users li {
-    background: var(--dark-row);
-}
-
-#messages li:nth-child(even) {
-    background: var(--light-row);
-}
-
-.header {
-    display: inline-block;
-    background: var(--input-background);
-    color: var(--input-text);
-    text-align: left;
-    padding: 10px;
-    width: 100%;
-}
-
-.content {
-    display: block;
-    overflow-y: scroll;
-    position: absolute;
-    bottom: 0;
-} */
 
 
 
