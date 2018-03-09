@@ -15,21 +15,23 @@ $(function() {
 
     socket.on('connected', (userData) => {
         update(userData);
+        $('#messages').empty();
+        $('#messages').append($('<li>').text("You are " + userData.name + "."));
         console.log(userData.name + " is connected");
     });
     
 
-    $('form').submit(function() {
+    $('form').submit( () => {
         socket.emit('chat message', $('#m').val());
         $('#m').val('');
         return false;
     });
 
-    socket.on('chat message', function(msg) {
+    socket.on('chat message', (msg) => {
         console.log(msg);
 
         let date = new Date(msg.time);
-        let time = date.getHours() + ':' + ('0' + date.getMinutes()).substr(-2);
+        let time = ('0' + date.getHours()).substr(-2) + ':' + ('0' + date.getMinutes()).substr(-2);
         let uname = $('<span>').text(msg.uname).css("color", msg.color);
 
 
@@ -42,6 +44,13 @@ $(function() {
         }
 
         $('#messages').append(li);
+    });
+
+    socket.on('update users', (users) => {
+        $('#users').empty();
+        for (u of users) {
+            $('#users').append($('<li>').text(u));
+        }
     });
 
 });

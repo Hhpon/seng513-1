@@ -6,6 +6,7 @@ global constants
     --light-row: #2a373d;
     --input-background: #455A64;
     --input-text: #ECEFF1;
+    --baby-blue: #82E0FF;
 }
 
 * {
@@ -38,7 +39,7 @@ form input {
 
 form button {
     width: 9%;
-    background: rgb(130, 224, 255);
+    background: var(--baby-blue);
     border: none;
     padding: 10px;
 }
@@ -51,23 +52,44 @@ form button:active {
     background: #FFB74D;
 }
 
-#messages {
+#messages, #users {
     list-style-type: none;
     margin: 0;
     padding: 0;
     color: var(--input-text);
 }
 
-#messages li {
+#messages li, #users li {
     padding: 5px 10px;
+    width: 100%;
+    display: inline-block;
 }
 
-#messages li:nth-child(odd) {
+#messages li:nth-child(odd), #users li {
     background: var(--dark-row);
 }
 
 #messages li:nth-child(even) {
     background: var(--light-row);
+}
+
+#main {
+    display: flex;
+}
+
+#messages-area {
+    width: 75%;
+    float: left;
+}
+
+#users-area {
+    width: 25%;
+    float: right;
+}
+
+#valign-messages {
+    position: relative;
+    height: 100%;
 }
 
 .header {
@@ -78,3 +100,35 @@ form button:active {
     padding: 10px;
     width: 100%;
 }
+
+.content {
+    display: block;
+    overflow-y: scroll;
+    position: absolute;
+    bottom: 0;
+}
+
+
+
+
+/* source: https://codepen.io/devstreak/pen/dMYgeO */
+
+ .scroll::-webkit-scrollbar-track
+ {
+     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+     border-radius: 10px;
+     background-color: var(--light-row);
+ }
+ 
+ .scroll::-webkit-scrollbar
+ {
+     width: 12px;
+     background-color: var(--light-row);
+ }
+ 
+ .scroll::-webkit-scrollbar-thumb
+ {
+     border-radius: 10px;
+     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+     background-color: var(--baby-blue);
+ }

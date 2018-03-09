@@ -95,10 +95,12 @@ Message.prototype.toString = function() {
 }
 
 const maxUsers = Math.min(ANIMALS.length, COLORS.length);
+const maxLogEntries = 10;
 let colorIndex = 0;
 let animalIndex = 0;
 let userIndex = 0;
 let connectedUsers = {};
+let chatLog = [];
 
 
 io.on('connection', (socket) => {
@@ -124,19 +126,28 @@ io.on('connection', (socket) => {
 
     // save user data in a cookie
     socket.emit('connected', user);
+    updateUserList();
 
     // receive message
     socket.on('chat message', (txt) => {
         msg = new Message(txt, user);
         console.log(msg.toString());
         io.emit('chat message', msg);
+        chatLog.push(msg);
+        chatLog.slice(chatLog.length - maxLogEntries);
     });
 
     // disconnect
     socket.on('disconnect', () => {
         user.deactivate();
+        updateUserList();
         console.log(user.name + " has left");
     });
+
+    // update user list
+    function updateUserList() {
+        io.emit('update users', Object.keys(connectedUsers).sort());
+    }
 });
 
 

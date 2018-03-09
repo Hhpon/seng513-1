@@ -9,11 +9,26 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/main.js"></script>
 
-    <div class="header">
-      You are <span id="username"></span>.
-    </div>
-    <div>
-      <ul id="messages"></ul>
+    <div id="main">
+      <div id="messages-area">
+        <div class="header">
+          You are <span id="username"></span>.
+        </div>
+        <div id="valign-messages">
+          <div class="content scroll">
+            <ul id="messages"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="users-area">
+        <div class="header">
+          Online users:
+        </div>
+        <div class="content scroll">
+          <ul id="users"></ul>
+        </div>
+      </div>
     </div>
 
     <form action="">
