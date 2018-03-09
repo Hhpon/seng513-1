@@ -1,5 +1,7 @@
 # SENG 533 - Assignment 3
 
+![Screenshot](screenshot.png)
+
 ## Instructions
 
 ### Start Server
