@@ -58,7 +58,7 @@ class User {
             }
             name = "";
         }
-        while (this.name in Object.keys(connectedUsers));
+        while (connectedUsers.hasOwnProperty(name));
 
         this.color = color || COLORS[colorIndex++];
         colorIndex = (colorIndex + 1) % COLORS.length;
@@ -68,12 +68,24 @@ class User {
     }
 
     changeName(name) {
-        if (!(name in Object.keys(connectedUsers))) {
+        if (name != "" && !connectedUsers.hasOwnProperty(name)) {
             // update entry and change name
             delete connectedUsers[this.name];
             this.name = name;
             connectedUsers[this.name] = this;
+            return true;
         }
+        return false;
+    }
+
+    changeColor(color) {
+        // verify that color is valid
+        let validHex = RegExp(/^[\dA-Fa-f]{6}$/);
+        if (validHex.test(newColor)) {
+            this.color = '#' + color;
+            return true;
+        }
+        return false;
     }
 
     deactivate() {
@@ -91,7 +103,9 @@ class Message {
     }
 }
 Message.prototype.toString = function() {
-    return '[' + this.time + '] ' + this.color + ' ' + this.uname + '<' + this.uid + '>: ' + this.txt;
+    let date = new Date(msg.time);
+    let time = ('0' + date.getHours()).substr(-2) + ':' + ('0' + date.getMinutes()).substr(-2);
+    return time + ' ' + this.uname + ': ' + this.txt;
 }
 
 const maxUsers = Math.min(ANIMALS.length, COLORS.length);
@@ -127,6 +141,7 @@ io.on('connection', (socket) => {
     // save user data in a cookie
     socket.emit('connected', user);
     updateUserList();
+    sendMessageHistory();
 
     // receive message
     socket.on('chat message', (txt) => {
@@ -135,21 +150,45 @@ io.on('connection', (socket) => {
         io.emit('chat message', msg);
         chatLog.push(msg);
         chatLog.slice(chatLog.length - maxLogEntries);
+
+        // check for name change
+        if (txt.startsWith("/nick ")) {
+            oldName = user.name;
+            newName = txt.split(' ').slice(1).join(' ');
+            if (user.changeName(newName)) {
+                updateUserList();
+                socket.emit('update', user);
+                console.log(oldName + " changed name to " + newName);
+            }
+        // check for color change
+        } else if (txt.startsWith("/nickcolor ")) {
+            oldColor = user.color;
+            newColor = txt.split(' ')[1];
+            if (user.changeColor(newColor)) {
+                console.log(user.name + " changed color from " + oldColor + " to #" + newColor);
+            }
+        }
     });
 
     // disconnect
     socket.on('disconnect', () => {
         user.deactivate();
         updateUserList();
-        console.log(user.name + " has left");
+        console.log(user.name + " has left...");
     });
 
     // update user list
     function updateUserList() {
         io.emit('update users', Object.keys(connectedUsers).sort());
     }
-});
 
+    function sendMessageHistory() {
+        chatLog.forEach((msg) => {
+            socket.emit('chat message', msg);
+        });
+    }
+
+});
 
 // listen for new connections
 http.listen(port, () => {
