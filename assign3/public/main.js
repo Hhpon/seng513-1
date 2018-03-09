@@ -44,6 +44,7 @@ $(function() {
         }
 
         $('.messages.content').append(li);
+        $('.messages.content').scrollTop($('.messages.content')[0].scrollHeight);
     });
 
     socket.on('update users', (users) => {
