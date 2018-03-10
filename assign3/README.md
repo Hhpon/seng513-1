@@ -8,9 +8,9 @@
 
 To run the server, navigate the directory containing this README file and run:
 
-`node install`
+`npm install`
 
-`node start`
+`npm start`
 
 ### Load Chat Client
 
